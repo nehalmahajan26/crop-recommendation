@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crop Details</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const crop = urlParams.get("crop");
+      
+      const cropsData = {
+        "banana": [
+          "Thrives in tropical and subtropical climates.",
+          "Requires well-drained, fertile soil rich in organic matter.",
+          "Needs adequate irrigation and protection from strong winds."
+        ],
+        "blackgram": [
+          "Grows well in warm, semi-arid regions.",
+          "Prefers loamy soil with good drainage.",
+          "Drought-resistant and requires minimal irrigation."
+        ],
+        "coconut": [
+          "Requires sandy, well-drained soil with high moisture content.",
+          "Thrives in coastal and humid tropical regions.",
+          "Needs regular watering, especially in dry periods."
+        ],
+        "grapes": [
+          "Prefers warm, dry summers and well-drained soil.",
+          "Requires proper pruning and trellising for high yield.",
+          "Sensitive to excessive rainfall and frost."
+        ],
+        "jute": [
+          "Needs a warm and humid climate with heavy rainfall.",
+          "Grows best in well-drained alluvial soil.",
+          "Used mainly for making ropes, bags, and textiles."
+        ],
+        "lentil": [
+          "Grows best in cool winters and dry summers.",
+          "Requires well-drained loamy or sandy soil.",
+          "Drought-tolerant and fixes nitrogen in the soil."
+        ],
+        "maize": [
+          "Thrives in warm climates with well-distributed rainfall.",
+          "Requires fertile, well-drained soil rich in organic matter.",
+          "Used for food, fodder, and industrial purposes."
+        ],
+        "mango": [
+          "Prefers tropical to subtropical climates.",
+          "Requires well-drained, sandy loam soil.",
+          "Needs regular pruning for better fruit yield."
+        ],
+        "orange": [
+          "Thrives in subtropical regions with moderate rainfall.",
+          "Requires well-drained sandy loam soil.",
+          "Needs protection from frost and high winds."
+        ],
+        "papaya": [
+          "Grows best in warm, tropical climates.",
+          "Requires fertile, well-drained soil with high organic matter.",
+          "Needs protection from strong winds and excessive moisture."
+        ],
+        "rice": [
+          "Requires high humidity and standing water during growth.",
+          "Grows best in clayey soil that retains moisture.",
+          "Essential staple food for a large population."
+        ],
+        "jowar": [
+          "Thrives in semi-arid conditions with low rainfall.",
+          "Requires well-drained sandy loam soil.",
+          "Used as food, fodder, and biofuel."
+        ],
+        "cashewnut": [
+          "Grows best in coastal sandy soil.",
+          "Requires warm, humid conditions with moderate rainfall.",
+          "Used for snacks, oil extraction, and confectioneries."
+        ],
+        "sugarcane": [
+          "Needs a tropical climate with high humidity.",
+          "Requires fertile, well-drained soil and regular irrigation.",
+          "Used for sugar production and ethanol extraction."
+        ],
+        "sweet potato": [
+          "Thrives in warm climates with sandy loam soil.",
+          "Requires minimal water and is drought-resistant.",
+          "Rich in vitamins and widely used in cooking."
+        ],
+        "tapioca": [
+          "Prefers tropical and subtropical climates.",
+          "Grows well in well-drained sandy loam soil.",
+          "Used for producing starch and flour."
+        ],
+        "black pepper": [
+          "Thrives in hot and humid conditions.",
+          "Requires well-drained loamy soil with organic matter.",
+          "Needs support structures for climbing vines."
+        ],
+        "dry ginger": [
+          "Grows well in warm and humid climates.",
+          "Requires loamy soil rich in organic matter.",
+          "Used for medicinal and culinary purposes."
+        ],
+        "arecanut": [
+          "Thrives in tropical climates with high rainfall.",
+          "Requires well-drained, loamy soil.",
+          "Used in betel nut consumption and commercial products."
+        ],
+        "dry chillies": [
+          "Needs a warm and dry climate.",
+          "Prefers sandy loam soil with proper drainage.",
+          "Widely used in spices and food industry."
+        ],
+        "turmeric": [
+          "Requires a warm and humid climate.",
+          "Grows best in loamy soil rich in organic content.",
+          "Used for medicinal and culinary purposes."
+        ],
+        "urad": [
+          "Grows well in warm and semi-arid regions.",
+          "Requires loamy soil with good drainage.",
+          "High protein content and widely used in Indian cuisine."
+        ],
+        "bajra": [
+          "Thrives in hot and arid conditions.",
+          "Requires sandy or light loamy soil.",
+          "Staple food grain in many regions."
+        ],
+        "ragi": [
+          "Grows best in semi-arid regions.",
+          "Requires well-drained loamy soil.",
+          "Rich in calcium and fiber."
+        ],
+        "groundnut": [
+          "Thrives in warm climates with sandy loam soil.",
+          "Requires moderate rainfall and good drainage.",
+          "Used for oil extraction and food products."
+        ],
+        "wheat": [
+          "Requires cool climate during growth and warm climate during harvesting.",
+          "Prefers well-drained loamy soil.",
+          "Major staple food crop worldwide."
+        ],
+        "tobacco": [
+          "Grows best in warm, dry conditions.",
+          "Requires well-drained sandy loam soil.",
+          "Used in the tobacco industry."
+        ],
+        "onion": [
+          "Needs a mild climate with well-drained soil.",
+          "Requires good irrigation and moisture control.",
+          "Widely used in culinary applications."
+        ],
+        "coriander": [
+          "Prefers cool, dry climates for growth.",
+          "Requires well-drained, loamy soil.",
+          "Used as a spice and for medicinal purposes."
+        ],
+        "soyabean": [
+          "Thrives in warm climates with moderate rainfall.",
+          "Requires fertile, well-drained soil.",
+          "Used for oil and protein-rich food products."
+        ],
+        "bhindi": [
+          "Grows well in warm climates.",
+          "Requires well-drained sandy loam soil.",
+          "Rich in fiber and vitamins."
+        ],
+        "brinjal": [
+          "Requires warm climate and well-drained soil.",
+          "Needs regular watering and pest control.",
+          "Widely used in cooking."
+        ],
+        "sesamum": [
+          "Grows best in well-drained sandy soil.",
+          "Thrives in warm, dry conditions.",
+          "Used for oil extraction and culinary uses."
+        ]
+      };
+      
+      if (crop && cropsData[crop]) {
+        document.getElementById("cropTitle").innerText = crop.charAt(0).toUpperCase() + crop.slice(1);
+        document.getElementById("cropInfo").innerHTML = `<ul>${cropsData[crop].map(point => `<li>${point}</li>`).join('')}</ul>`;
+      } else {
+        document.getElementById("cropTitle").innerText = "Crop Not Found";
+        document.getElementById("cropInfo").innerText = "No details available for the selected crop.";
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 id="cropTitle">Crop Details</h2>
+    <p id="cropInfo"></p>
+    <a href="crop_recommendation.html" class="btn btn-primary">Back to Recommendation</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Top 3 Crops</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Select State & District</h2>
+    <form id="cropForm">
+      <div class="form-group">
+        <label for="state">State:</label>
+        <select id="state" class="form-control">
+          <option>Andaman and Nicobar Islands</option>
+          <!-- Add more states if needed -->
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="district">District:</label>
+        <select id="district" class="form-control">
+          <option>NICOBARS</option>
+          <!-- Add more districts if needed -->
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary">Get Top Crops</button>
+    </form>
+    <div class="mt-3" id="cropResult"></div>
+  </div>
+
+  <script>
+    document.getElementById("cropForm").onsubmit = async function(e) {
+      e.preventDefault();
+      const state = document.getElementById("state").value;
+      const district = document.getElementById("district").value;
+
+      const payload = { "state": state, "district": district };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8005/top_crops", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+
+        let resultHTML = "<h4>Top 3 Crops</h4><ul>";
+        data.forEach(crop => {
+          resultHTML += `<li>${crop.Crop}: ${crop.Production} tons</li>`;
+        });
+        resultHTML += "</ul>";
+
+        document.getElementById("cropResult").innerHTML = resultHTML;
+
+      } catch (err) {
+        document.getElementById("cropResult").innerText = "Error retrieving data.";
+      }
+    };
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
