@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spark Streaming Data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { padding: 10px; text-align: center; border: 1px solid #ddd; }
+        h2 { text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h2>Spark Streaming Data Dashboard</h2>
+    
+    <div id="averages">
+        <h3>Average Data:</h3>
+        <p>Loading...</p>
+    </div>
+
+    <div id="latestData">
+        <h3>Latest 10 Data Records:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>N</th>
+                    <th>P</th>
+                    <th>K</th>
+                    <th>Temperature</th>
+                    <th>Humidity</th>
+                    <th>pH</th>
+                    <th>Rainfall</th>
+                </tr>
+            </thead>
+            <tbody id="dataRecords">
+                <!-- Data will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            function fetchData() {
+                $.ajax({
+                    url: '/spark-data',
+                    method: 'GET',
+                    success: function(response) {
+                        const avg = response.averages;
+                        $('#averages').html(`
+                            <h3>Average Data:</h3>
+                            <p><strong>Average N:</strong> ${avg.avg_N}</p>
+                            <p><strong>Average P:</strong> ${avg.avg_P}</p>
+                            <p><strong>Average K:</strong> ${avg.avg_K}</p>
+                            <p><strong>Average Temperature:</strong> ${avg.avg_temp} °C</p>
+                            <p><strong>Average Humidity:</strong> ${avg.avg_humidity} %</p>
+                            <p><strong>Average pH:</strong> ${avg.avg_ph}</p>
+                            <p><strong>Average Rainfall:</strong> ${avg.avg_rain} mm</p>
+                        `);
+
+                        const records = response.latest_data;
+                        $('#dataRecords').empty();
+                        records.forEach(function(record) {
+                            $('#dataRecords').append(`
+                                <tr>
+                                    <td>${new Date(record.timestamp * 1000).toLocaleString()}</td>
+                                    <td>${record.N}</td>
+                                    <td>${record.P}</td>
+                                    <td>${record.K}</td>
+                                    <td>${record.temperature}</td>
+                                    <td>${record.humidity}</td>
+                                    <td>${record.ph}</td>
+                                    <td>${record.rainfall}</td>
+                                </tr>
+                            `);
+                        });
+                    },
+                    error: function() {
+                        $('#averages').html('<p>Error loading data...</p>');
+                    }
+                });
+            }
+
+            fetchData();
+            setInterval(fetchData, 5000);  // Refresh every 5 seconds
+        });
+    </script>
+</body>
+</html>

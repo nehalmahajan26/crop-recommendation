@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Crop Recommendation</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    input, button { margin: 8px; padding: 5px; }
+    #sensorData { margin-top: 15px; color: green; }
+  </style>
+</head>
+<body>
+  <h2>Crop Recommendation</h2>
+
+  <label>N:</label><input type="number" id="N"><br>
+  <label>P:</label><input type="number" id="P"><br>
+  <label>K:</label><input type="number" id="K"><br>
+  <label>Soil pH:</label><input type="number" step="0.1" id="ph"><br>
+
+  <button onclick="predictCrop()">Predict Crop</button>
+
+  <div id="sensorData"></div>
+  <h3 id="result">Recommended Crop: </h3>
+
+  <script>
+    async function predictCrop() {
+      const N = parseFloat(document.getElementById("N").value);
+      const P = parseFloat(document.getElementById("P").value);
+      const K = parseFloat(document.getElementById("K").value);
+      const ph = parseFloat(document.getElementById("ph").value);
+
+      // Default values for temperature, humidity, and rainfall
+      let temp = 25, humidity = 50, rainfall = 5;
+
+      try {
+        // Fetch the latest feed entry from ThingSpeak
+        const channelID = "2916370";  // Your ThingSpeak channel ID
+        const apiKey = "JRLXG57867B03FVM";  // Your API key
+        const resp = await fetch(`https://api.thingspeak.com/channels/${channelID}/feeds.json?api_key=${apiKey}&results=1`);
+
+        if (!resp.ok) {
+          throw new Error(`Failed to fetch data from ThingSpeak. Status: ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        const latest = data.feeds[data.feeds.length - 1];  // Get the most recent entry
+
+        if (!latest) {
+          throw new Error("No valid data available in the latest feed.");
+        }
+
+        // Parse the fetched data for temp, humidity, and rainfall
+        temp = parseFloat(latest.field1);  // Temperature
+        humidity = parseFloat(latest.field2);  // Humidity percentage
+        rainfall = parseFloat(latest.field3);  // Rainfall percentage
+
+        // Show fetched sensor data
+        document.getElementById("sensorData").innerHTML = `
+          <strong>Latest entry fetched from ThingSpeak:</strong><br>
+          🌡️ Temperature: ${temp} °C<br>
+          💧 Humidity: ${humidity}%<br>
+          🌧️ Rainfall: ${rainfall}%
+        `;
+      } catch (err) {
+        document.getElementById("sensorData").innerHTML = `
+          <strong>ThingSpeak data is not available right now.</strong><br>
+          Using default values: 🌡️ 25°C, 💧 50%, 🌧️ 5mm.
+        `;
+        console.error("Error fetching data from ThingSpeak:", err);
+      }
+
+      // Prepare the input features
+      const features = [N, P, K, temp, humidity, ph, rainfall];
+
+      try {
+        // Send data to Flask for prediction
+        const res = await fetch("http://localhost:5000/predict_crop", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ features: features })
+        });
+
+        const result = await res.json();
+
+        if (result.crop) {
+          document.getElementById("result").innerText = "✅ Recommended Crop: " + result.crop;
+        } else {
+          document.getElementById("result").innerText = "❌ Error: " + result.error;
+        }
+      } catch (err) {
+        document.getElementById("result").innerText = "⚠️ Error fetching prediction.";
+        console.error("Error in prediction request:", err);
+      }
+    }
+  </script>
+</body>
+</html>
+

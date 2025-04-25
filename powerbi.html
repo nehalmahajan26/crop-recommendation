@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Power BI Dashboard</title>
+  <!-- Bootstrap CSS from CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding-top: 70px;
+      background-color: #f4f4f4;
+    }
+    .container-custom {
+      margin: 20px;
+    }
+    .card-custom {
+      width: 200px;
+      height: 100px;
+      background: white;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: box-shadow 0.3s ease, background 0.3s ease;
+      margin-bottom: 20px;
+    }
+    .card-custom:hover {
+      background: #ddd;
+      box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
+    }
+    .cards-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .image-container {
+      margin-top: 20px;
+      display: none;
+    }
+    .image-container img {
+      width: 90%;
+      max-width: 800px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .description {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+    }
+  </style>
+  <script>
+    function showReport(imageUrl, description) {
+      document.getElementById("powerbiImage").src = imageUrl;
+      document.getElementById("reportDescription").innerHTML = description;
+      document.getElementById("imageContainer").style.display = "block";
+    }
+  </script>
+</head>
+<body>
+  <!-- Top Navigation Bar (same as in crop_trend.html) -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="index.html">AgriTech Dashboard</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" 
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="crop_recommendation.html">Crop Recommendation</a></li>
+        <li class="nav-item active"><a class="nav-link" href="yield_prediction.html">Yield Prediction</a></li>
+        <li class="nav-item"><a class="nav-link" href="crop_trend.html">Crop Trend Analysis</a></li>
+        <li class="nav-item"><a class="nav-link" href="powerbi.html">Power BI Analysis</a></li>
+        <li class="nav-item"><a class="nav-link" href="market_data.html">Market Data</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+      </ul>
+    </div>
+  </nav>
+  
+  <!-- Main Content -->
+  <div class="container container-custom">
+    <h1>Power BI Dashboard</h1>
+    <p>Click on a card to view the corresponding analytics screenshot and description.</p>
+    <div class="cards-container">
+        <div class="card-custom" onclick="showReport('images/humidity.png', 'This report displays the average humidity trends for various crops.<br>It helps in understanding the average moisture levels needed in the field to grow the crop.')">
+            <div>Humidity for Crops</div>
+        </div>
+      
+      <div class="card-custom" onclick="showReport('images/temp.png', 'This report analyzes the average temperatures for various crops.')">
+        <div>Temperature for Crops</div>
+      </div>
+      
+      <div class="card-custom" onclick="showReport('images/npk.png', 'This report provides insights into soil quality parameters like Nitrogen, Potassium and Phosphorus.<br>It supports effective soil management practices.')">
+        <div>Soil Quality Insights</div>
+      </div>
+     
+      <div class="card-custom" onclick="showReport('images/ph.png', 'This report shows the impact of ph of soil on crops.<br>It helps in planning optimal growing conditions.')">
+        <div>Soil PH</div>
+      </div>
+      <!-- Card 5: Rainfall Patterns --> 
+      <div class="card-custom" onclick="showReport('images/rain.png', 'This report illustrates rainfall patterns and their effect on crop production.<br>It assists in water management strategies.')">
+        <div>Rainfall Patterns</div>
+      </div>
+     
+      <div class="card-custom" onclick="showReport('images/vary.png', 'This report compares the actual production values to those predicted by our model.')">
+        <div>Actual v/s Predicted Production</div>
+      </div>
+      
+      <div class="card-custom" onclick="showReport('images/cropvsyear.png', 'This report displays the sum of crop production per year.')">
+        <div>Crop Production</div>
+      </div>
+      
+      <div class="card-custom" onclick="showReport('images/cropinseason.png', 'This report shows the number of crops grown in different seasons.')">
+        <div>Variety of Crops</div>
+      </div>
+      
+      <div class="card-custom" onclick="showReport('images/avgprodpercrop.png', 'This report shows the analysis of the average production for various crops.')">
+        <div>Production per Crop</div>
+      </div>
+     
+      <div class="card-custom" onclick="showReport('images/prodperstate.png', 'This report analyses the production of various states in India, Uttar Pradesh is the highest.')">
+        <div>Production of States</div>
+      </div>
+      <div class="card-custom" onclick="showReport('images/sumbyseason.png', 'This report analyses the production in different crop seasons.')">
+        <div>Production by Season</div>
+      </div>
+    </div>
+    
+    <!-- Image Container for Selected Analytics with Writeup -->
+    <div class="image-container" id="imageContainer">
+      <h2>Selected Analytics</h2>
+      <img id="powerbiImage" src="" alt="Analytics Screenshot">
+      <p class="description" id="reportDescription"></p>
+    </div>
+  </div>
+  
+  <!-- Bootstrap and jQuery scripts from CDN -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
